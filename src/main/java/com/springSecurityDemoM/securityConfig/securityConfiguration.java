@@ -42,22 +42,11 @@ public class securityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.cors();
-        http.csrf().disable();
         http.authorizeHttpRequests(auth -> {
-            auth.requestMatchers("/", "/auth/**").permitAll();
+            auth.requestMatchers("/").permitAll();
             auth.requestMatchers("/process_inscription").permitAll();
-            auth.requestMatchers("/contact/**").permitAll();
-            auth.requestMatchers("/adminCreate").permitAll();
-            auth.requestMatchers("/codeActivate/**").permitAll();
-            auth.requestMatchers("/resetPassword/**").permitAll();
-            auth.requestMatchers("/admin/**").hasAuthority("ADMIN");
-            auth.requestMatchers("/client/**").hasAnyAuthority("CLIENT","ADMIN");
-            auth.anyRequest().authenticated();
         });
         http.authenticationProvider(authenticationProvider());
-        http.exceptionHandling().authenticationEntryPoint(unauthorizedHandler);
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
